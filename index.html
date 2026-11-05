@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viva Viajes · Clientes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #D91E36;
+      --red-dark: #B8172C;
+      --red-tint: #fdf1f2;
+      --ink: #1c1f26;
+      --ink-2: #4a505c;
+      --ink-3: #7b8190;
+      --line: #e6e4e0;
+      --line-strong: #d3d0ca;
+      --bg: #f4f2ee;
+      --surface: #ffffff;
+      --surface-subtle: #faf9f7;
+      --radius: 8px;
+      --shadow: 0 1px 2px rgba(28, 31, 38, .05), 0 4px 14px rgba(28, 31, 38, .04);
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+    body.lock { overflow: hidden; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+
+    /* ---------- Cabecera ---------- */
+    .topbar {
+      background: var(--red);
+      color: #fff;
+      border-bottom: 1px solid rgba(0, 0, 0, .08);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .topbar-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark {
+      flex: none; width: 36px; height: 36px; border-radius: 10px;
+      background: #fff; color: var(--red);
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .brand:hover .brand-mark {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
+    }
+    .brand-mark svg {
+      width: 20px; height: 20px;
+      transform: rotate(45deg);
+      transition: transform .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .brand:hover .brand-mark svg {
+      transform: rotate(45deg) translate(1px, -1px);
+    }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+    .brand-name { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+    .brand-section { font-size: 12px; color: rgba(255, 255, 255, .8); white-space: nowrap; }
+
+    /* ---------- Usuario (Top Bar) ---------- */
+    .user-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 12px 4px 5px;
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 9999px;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+      transition: background .15s ease, border-color .15s ease, transform .1s ease, box-shadow .15s ease;
+    }
+    .user-chip:hover {
+      background: rgba(255, 255, 255, .22);
+      border-color: rgba(255, 255, 255, .38);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+    }
+    .user-avatar {
+      position: relative;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: var(--red);
+      font-weight: 700;
+      font-size: 11.5px;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
+      flex: none;
+    }
+    .user-status-dot {
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border: 2px solid var(--red);
+      border-radius: 50%;
+    }
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+      text-align: left;
+    }
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+    .user-role {
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, .82);
+      white-space: nowrap;
+      font-weight: 400;
+    }
+    .user-chev {
+      width: 13px;
+      height: 13px;
+      color: rgba(255, 255, 255, .75);
+      flex: none;
+      transition: transform .15s ease;
+    }
+    .user-chip:hover .user-chev {
+      transform: translateY(1px);
+      color: #ffffff;
+    }
+
+    /* ---------- Layout ---------- */
+    .page { max-width: 1240px; margin: 0 auto; padding: 28px 24px 64px; }
+    .page-head { margin-bottom: 20px; }
+    .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--red); margin-bottom: 4px; }
+    .page-head h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+    .page-head p { margin: 4px 0 0; color: var(--ink-3); font-size: 13.5px; }
+
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    /* ---------- Resumen ---------- */
+    .summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 0 0 18px; }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px 18px 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--red); }
+    .stat:nth-child(2)::before { background: var(--ink-2); }
+    .stat dt { font-size: 12px; font-weight: 500; color: var(--ink-3); margin: 0 0 4px; }
+    .stat dd { margin: 0; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+    /* ---------- Tabla ---------- */
+    .table-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 18px; border-bottom: 1px solid var(--line);
+    }
+    .table-head h2 { margin: 0; font-size: 15px; font-weight: 600; white-space: nowrap; }
+    .search { width: 280px; max-width: 100%; background: var(--surface-subtle); }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; font-weight: 600; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--ink-3);
+      padding: 10px 18px; background: var(--surface-subtle); border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    td { padding: 13px 18px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr[data-open] { cursor: pointer; transition: background .12s; }
+    tbody tr[data-open]:hover { background: #eeece8; }
+    tbody tr[data-open]:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+
+    .cell-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cell-sub { display: none; color: var(--ink-3); font-size: 12.5px; }
+    .muted { color: var(--ink-2); }
+    .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .col-email { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chev { width: 1%; padding-right: 14px; color: var(--line-strong); }
+    .chev svg { width: 16px; height: 16px; display: block; }
+    tr[data-open]:hover .chev { color: var(--ink); }
+    .empty { text-align: center; color: var(--ink-3); padding: 40px 16px; }
+
+    .table-foot {
+      padding: 11px 18px; border-top: 1px solid var(--line);
+      font-size: 12px; color: var(--ink-3); background: var(--surface-subtle);
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    /* ---------- Formulario Lateral ---------- */
+    .form-panel { position: sticky; top: 84px; overflow: hidden; }
+    .form-panel header {
+      padding: 16px 20px; border-bottom: 1px solid var(--line);
+      background: var(--surface-subtle);
+    }
+    .form-panel h2 { margin: 0; font-size: 15px; font-weight: 600; }
+    .form-panel header p { margin: 2px 0 0; font-size: 12px; color: var(--ink-3); }
+    form.stack { padding: 20px; display: grid; gap: 15px; }
+    .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; }
+    .field .opt { color: var(--ink-3); font-weight: 400; }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      padding: 9px 11px;
+      outline: none;
+      transition: border-color .12s, box-shadow .12s;
+    }
+    input::placeholder, textarea::placeholder { color: #aaa8a1; }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 3px rgba(28, 31, 38, .12);
+    }
+    textarea { resize: vertical; min-height: 84px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid transparent; border-radius: 6px; padding: 10px 16px;
+      font-weight: 600; cursor: pointer; text-decoration: none;
+      transition: background .12s, transform .06s, border-color .12s;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .btn-primary { background: var(--ink); color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+    .btn-primary:hover { background: #2f3440; }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-red:hover { background: var(--red-dark); }
+    .btn-ghost { background: #fff; color: var(--ink-2); border-color: var(--line-strong); }
+    .btn-ghost:hover { background: var(--surface-subtle); }
+    .btn-danger { background: #fff; color: var(--red); border-color: #f0c4c9; }
+    .btn-danger:hover { background: var(--red-tint); }
+
+    /* ---------- Detalle (diálogo con animaciones) ---------- */
+    dialog {
+      border: 0; padding: 0; background: transparent; color: inherit;
+      width: calc(100% - 32px); max-width: 440px; margin: auto;
+      overflow: visible;
+    }
+    dialog::backdrop {
+      background: rgba(28, 31, 38, .48);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    dialog[open]::backdrop {
+      animation: backdropIn .22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    dialog.is-closing::backdrop {
+      animation: backdropOut .18s ease-in forwards;
+    }
+    .sheet {
+      background: var(--surface); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .28), 0 4px 16px rgba(0, 0, 0, .08);
+      max-height: calc(100dvh - 32px); overflow-y: auto;
+      transform-origin: center center;
+    }
+    dialog[open] .sheet {
+      animation: modalSpringIn .26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: transform, opacity;
+    }
+    dialog.is-closing .sheet {
+      animation: modalSpringOut .18s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes backdropIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes backdropOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes modalSpringIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.93) translateY(14px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    @keyframes modalSpringOut {
+      0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+      }
+    }
+    @keyframes sheetSlideUp {
+      from { opacity: 0; transform: translateY(100%); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes sheetSlideDown {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(100%); }
+    }
+    .sheet-head { padding: 20px 22px 16px; display: flex; align-items: flex-start; gap: 14px; background: var(--surface-subtle); border-bottom: 1px solid var(--line); }
+    .sheet-head h3 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+    .sheet-head p { margin: 1px 0 0; font-size: 12.5px; color: var(--ink-3); }
+    .x-btn {
+      background: none; border: 0; cursor: pointer; flex: none;
+      width: 32px; height: 32px; border-radius: 6px;
+      color: var(--ink-3); font-size: 24px; line-height: 1;
+      display: block; margin: -4px -8px 0 auto;
+    }
+    .x-btn:hover { background: rgba(0, 0, 0, .06); color: var(--ink); }
+    .sheet-body { padding: 6px 22px 8px; }
+    .row { padding: 13px 0; border-bottom: 1px solid var(--line); }
+    .row:last-child { border-bottom: 0; }
+    .row .lbl { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px; }
+    .row .val { word-break: break-word; }
+    .row a { color: var(--red); font-weight: 500; text-decoration: none; }
+    .row a:hover { text-decoration: underline; }
+    .row .wa-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      color: #0b703e; font-weight: 600; text-decoration: none;
+      background: #e8f9ee; padding: 4px 10px; border-radius: 6px;
+      transition: background .12s;
+    }
+    .row .wa-link:hover { background: #d3f3dd; text-decoration: none; }
+    .row .wa-link svg { width: 16px; height: 16px; fill: currentColor; }
+    .row .none { color: var(--ink-3); }
+    .edit-field { padding: 8px 0; }
+    .edit-field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; }
+    .sheet-foot { padding: 14px 22px 20px; display: flex; gap: 10px; justify-content: space-between; align-items: center; }
+    .sheet-foot.confirm { flex-direction: column; align-items: stretch; background: var(--surface-subtle); border-top: 1px solid var(--line); margin-top: 8px; }
+    .confirm-msg { margin: 0; font-size: 14px; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* ---------- Aviso ---------- */
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 12px);
+      background: var(--ink); color: #fff; font-size: 13px;
+      padding: 11px 18px; border-radius: 6px; border-left: 4px solid var(--red);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+      opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+      max-width: calc(100vw - 32px); z-index: 80;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .form-panel { position: static; }
+    }
+    @media (max-width: 640px) {
+      .topbar-inner { padding: 0 16px; height: 56px; }
+      .page { padding: 20px 16px 48px; }
+      .page-head h1 { font-size: 21px; }
+      .page-head p { display: none; }
+      .summary { gap: 10px; }
+      .stat { padding: 12px 14px; }
+      .stat dd { font-size: 22px; }
+      .table-head { flex-direction: column; align-items: stretch; gap: 10px; padding: 14px; }
+      .search { width: 100%; }
+      thead { display: none; }
+      td { padding: 13px 14px; }
+      td.col-email { display: none; }
+      .cell-sub { display: block; }
+      .table-foot { padding: 10px 14px; }
+      form.stack { padding: 16px; }
+
+      dialog { margin: auto auto 0; width: 100%; max-width: none; }
+      .sheet {
+        border-radius: 16px 16px 0 0;
+        max-height: 92dvh;
+        transform-origin: bottom center;
+      }
+      .sheet-foot { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+      dialog[open] .sheet {
+        animation: sheetSlideUp .28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      dialog.is-closing .sheet {
+        animation: sheetSlideDown .18s cubic-bezier(0.4, 0, 1, 1) forwards;
+      }
+      .user-role, .user-chev { display: none; }
+      .user-chip { padding: 4px 10px 4px 4px; }
+      .user-avatar { width: 28px; height: 28px; font-size: 10.5px; }
+    }
+    @media (max-width: 400px) {
+      .brand-section { display: none; }
+      .user-meta { display: none; }
+      .user-chip { padding: 3px; border-radius: 50%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true" title="Viva Viajes">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Viva Viajes</span>
+          <span class="brand-section">Panel de administración</span>
+        </span>
+      </div>
+      <div class="user-chip" role="button" tabindex="0" title="Perfil de John Doe">
+        <div class="user-avatar" aria-hidden="true">
+          <span>JD</span>
+          <span class="user-status-dot" title="En línea"></span>
+        </div>
+        <div class="user-meta">
+          <span class="user-name">John Doe</span>
+          <span class="user-role">Asesor de viajes</span>
+        </div>
+        <svg class="user-chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 6l4 4 4-4"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <div class="eyebrow" id="today">Hoy</div>
+      <h1>Clientes</h1>
+      <p>Registro y seguimiento de contactos del equipo de asesores.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- Izquierda: resumen y tabla -->
+      <section>
+        <dl class="summary">
+          <div class="stat"><dt>Total de clientes</dt><dd id="statTotal">0</dd></div>
+          <div class="stat"><dt>Últimos 30 días</dt><dd id="statMonth">0</dd></div>
+        </dl>
+
+        <div class="panel">
+          <div class="table-head">
+            <h2>Listado de clientes</h2>
+            <input class="search" type="search" id="search" placeholder="Nombre, correo o teléfono" aria-label="Buscar por nombre, correo o teléfono">
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Teléfono</th>
+                <th>Correo electrónico</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div class="table-foot" id="count">0 registros</div>
+        </div>
+      </section>
+
+      <!-- Derecha: formulario lateral -->
+      <aside class="panel form-panel" id="formPanel" aria-label="Nuevo cliente">
+        <header>
+          <h2>Nuevo cliente</h2>
+          <p>(*) Obligatorios.</p>
+        </header>
+        <form class="stack" id="form" autocomplete="off">
+          <div class="field">
+            <label for="name">Nombre completo *</label>
+            <input id="name" type="text" required placeholder="Juan Pérez">
+          </div>
+          <div class="field">
+            <label for="email">Correo electrónico *</label>
+            <input id="email" type="email" required placeholder="cliente@correo.com">
+          </div>
+          <div class="field">
+            <label for="phone">Teléfono *</label>
+            <input id="phone" type="tel" required placeholder="0991234567">
+          </div>
+          <div class="field">
+            <label for="notes">Notas <span class="opt">(opcional)</span></label>
+            <textarea id="notes" placeholder="Destino de interés, presupuesto, fechas…"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar cliente</button>
+        </form>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Detalle / edición del cliente -->
+  <dialog id="detail" aria-labelledby="dName">
+    <form class="sheet" id="editForm" autocomplete="off">
+      <div class="sheet-head">
+        <div>
+          <h3 id="dName"></h3>
+          <p id="dDate"></p>
+        </div>
+        <button type="button" class="x-btn" id="dClose" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="sheet-body" id="dBody"></div>
+      <div class="sheet-foot" id="dFoot"></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = 'vivaviajes_clientes_v2';
+
+    const seed = [
+      { id: 1, name: 'David Paredes',   email: 'david.paredes@gmail.com', phone: '0983345834', notes: 'Tour Galápagos para 3 personas.',          date: '2026-10-28' },
+      { id: 2, name: 'Carolina Tobar',  email: 'ctobar@outlook.com',      phone: '0993345676', notes: 'Cotización Europa clásica en junio.',      date: '2026-10-29' },
+      { id: 3, name: 'Marco Salazar',   email: 'msalazar@empresa.ec',     phone: '0981123490', notes: 'Llamar después de las 16:00 por la visa.', date: '2026-10-30' },
+      { id: 4, name: 'Germania Ruiz',   email: 'gruiz.viajes@gmail.com',  phone: '0958849302', notes: 'Boleto confirmado a Cancún.',              date: '2026-10-31' },
+      { id: 5, name: 'Paulina Estévez', email: 'pau.estevez@gmail.com',   phone: '0994432198', notes: 'Solicita descuento para grupo de 10.',     date: '2026-11-02' }
+    ];
+
+    let records = load();
+    let term = '';
+    let openId = null;
+    let foot = 'view';
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return seed.slice();
+    }
+    function save() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (e) {}
+    }
+
+    const $ = id => document.getElementById(id);
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function fmtDate(iso) {
+      const [y, m, d] = iso.split('-');
+      const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+      return `${parseInt(d, 10)} ${meses[parseInt(m, 10) - 1]} ${y}`;
+    }
+
+    function iso(d) {
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    }
+
+    function getWaLink(phone) {
+      let clean = String(phone).replace(/\D/g, '');
+      if (clean.startsWith('09') && clean.length === 10) {
+        clean = '593' + clean.slice(1);
+      }
+      return `https://wa.me/${clean}`;
+    }
+
+    const chevron = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l5 5-5 5"/></svg>';
+    const waIcon = '<svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-5.46-4.45-9.92-9.91-9.92zm5.82 14.04c-.24.68-1.2 1.25-1.67 1.33-.44.07-1.02.1-3.3-0.85-2.73-1.13-4.49-3.92-4.63-4.1-.13-.19-1.11-1.48-1.11-2.82s.7-2 0.95-2.27c.25-.27.54-.34.72-.34.19 0 .37.01.53.02.17.01.4-.06.62.48.24.57.8 1.95.87 2.09.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.3.37-.43.5-.14.14-.29.3-.12.59.16.29.73 1.2 1.56 1.94 1.07.96 1.98 1.26 2.27 1.4.29.14.46.12.63-.07.17-.19.74-.86.94-1.16.2-.29.4-.24.68-.14.28.1 1.78.84 2.08.99.3.15.5.22.58.35.07.12.07.72-.17 1.4z"/></svg>';
+
+    /* ---------- Lista ---------- */
+    function render() {
+      const q = term.trim().toLowerCase();
+      const list = records.filter(r =>
+        !q ||
+        r.name.toLowerCase().includes(q) ||
+        r.email.toLowerCase().includes(q) ||
+        r.phone.includes(q)
+      );
+
+      $('tbody').innerHTML = list.length === 0
+        ? `<tr><td colspan="4" class="empty">${records.length ? 'Ningún cliente coincide con la búsqueda.' : 'Aún no hay clientes registrados.'}</td></tr>`
+        : list.map(r => `
+          <tr data-open="${r.id}" tabindex="0" aria-label="Ver detalle de ${esc(r.name)}">
+            <td>
+              <div class="cell-name">${esc(r.name)}</div>
+              <div class="cell-sub">${esc(r.phone)} · ${esc(r.email)}</div>
+            </td>
+            <td class="col-phone muted num">${esc(r.phone)}</td>
+            <td class="col-email muted">${esc(r.email)}</td>
+            <td class="chev">${chevron}</td>
+          </tr>`).join('');
+
+      $('count').textContent = q
+        ? `${list.length} de ${records.length} registros`
+        : `${records.length} ${records.length === 1 ? 'registro' : 'registros'}`;
+
+      const limit = new Date();
+      limit.setDate(limit.getDate() - 29);
+      const limitIso = iso(limit);
+
+      $('statTotal').textContent = records.length;
+      $('statMonth').textContent = records.filter(r => r.date >= limitIso).length;
+    }
+
+    /* ---------- Detalle / edición ---------- */
+    const dlg = $('detail');
+    const current = () => records.find(x => x.id === openId);
+
+    function showBody(editing) {
+      const r = current();
+      $('dName').textContent = r.name;
+      $('dDate').textContent = r.date ? `Registrado el ${fmtDate(r.date)}` : '';
+      if (!editing) {
+        $('dBody').innerHTML = `
+          <div class="row">
+            <div class="lbl">Teléfono</div>
+            <div class="val">
+              <a href="${getWaLink(r.phone)}" target="_blank" rel="noopener noreferrer" class="wa-link" title="Abrir chat en WhatsApp">
+                ${waIcon}
+                <span>${esc(r.phone)}</span>
+              </a>
+            </div>
+          </div>
+          <div class="row"><div class="lbl">Correo</div><div class="val"><a href="mailto:${esc(r.email)}">${esc(r.email)}</a></div></div>
+          <div class="row"><div class="lbl">Notas</div><div class="val">${r.notes ? esc(r.notes) : '<span class="none">Sin notas</span>'}</div></div>`;
+      } else {
+        $('dBody').innerHTML = `
+          <div class="edit-field"><label for="eName">Nombre completo *</label><input id="eName" type="text" required value="${esc(r.name)}"></div>
+          <div class="edit-field"><label for="eEmail">Correo electrónico *</label><input id="eEmail" type="email" required value="${esc(r.email)}"></div>
+          <div class="edit-field"><label for="ePhone">Teléfono / WhatsApp *</label><input id="ePhone" type="tel" required value="${esc(r.phone)}"></div>
+          <div class="edit-field"><label for="eNotes">Notas <span style="color:var(--ink-3);font-weight:400">(opcional)</span></label><textarea id="eNotes">${esc(r.notes || '')}</textarea></div>`;
+      }
+    }
+
+    function showFoot(kind) {
+      foot = kind;
+      const f = $('dFoot');
+      f.className = 'sheet-foot';
+      if (kind === 'view') {
+        f.innerHTML = `
+          <button type="button" class="btn btn-danger" data-act="ask-delete">Eliminar</button>
+          <button type="button" class="btn btn-primary" data-act="edit">Editar</button>`;
+      } else if (kind === 'edit') {
+        f.innerHTML = `
+          <button type="button" class="btn btn-ghost" data-act="cancel">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>`;
+      } else if (kind === 'confirm-save') {
+        f.className = 'sheet-foot confirm';
+        f.innerHTML = `
+          <p class="confirm-msg">¿Guardar los cambios en la ficha de este cliente?</p>
+          <div class="confirm-actions">
+            <button type="button" class="btn btn-ghost" data-act="back">Volver</button>
+            <button type="button" class="btn btn-primary" data-act="do-save">Sí, guardar</button>
+          </div>`;
+      } else if (kind === 'confirm-delete') {
+        f.className = 'sheet-foot confirm';
+        f.innerHTML = `
+          <p class="confirm-msg">¿Eliminar a <strong>${esc(current().name)}</strong>? Esta acción no se puede deshacer.</p>
+          <div class="confirm-actions">
+            <button type="button" class="btn btn-ghost" data-act="back">Cancelar</button>
+            <button type="button" class="btn btn-red" data-act="do-delete">Sí, eliminar</button>
+          </div>`;
+      }
+    }
+
+    function closeDetail() {
+      if (!dlg.open || dlg.classList.contains('is-closing')) return;
+      dlg.classList.add('is-closing');
+      setTimeout(() => {
+        dlg.close();
+        dlg.classList.remove('is-closing');
+      }, 180);
+    }
+
+    function openDetail(id) {
+      openId = id;
+      showBody(false);
+      showFoot('view');
+      dlg.classList.remove('is-closing');
+      dlg.showModal();
+    }
+
+    $('tbody').addEventListener('click', e => {
+      const row = e.target.closest('[data-open]');
+      if (row) openDetail(+row.dataset.open);
+    });
+    $('tbody').addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const row = e.target.closest('[data-open]');
+      if (row) { e.preventDefault(); openDetail(+row.dataset.open); }
+    });
+
+    $('dClose').addEventListener('click', closeDetail);
+    dlg.addEventListener('click', e => { if (e.target === dlg && foot === 'view') closeDetail(); });
+    dlg.addEventListener('cancel', e => {
+      e.preventDefault();
+      closeDetail();
+    });
+
+    $('editForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (foot === 'edit') showFoot('confirm-save');
+    });
+
+    $('dFoot').addEventListener('click', e => {
+      const btn = e.target.closest('[data-act]');
+      if (!btn) return;
+      const act = btn.dataset.act;
+
+      if (act === 'edit') {
+        showBody(true); showFoot('edit');
+        setTimeout(() => $('eName') && $('eName').focus(), 0);
+      } else if (act === 'cancel') {
+        showBody(false); showFoot('view');
+      } else if (act === 'back') {
+        showFoot(foot === 'confirm-save' ? 'edit' : 'view');
+      } else if (act === 'ask-delete') {
+        showFoot('confirm-delete');
+      } else if (act === 'do-save') {
+        const r = current();
+        r.name  = $('eName').value.trim();
+        r.email = $('eEmail').value.trim();
+        r.phone = $('ePhone').value.trim();
+        r.notes = $('eNotes').value.trim();
+        save(); render();
+        showBody(false); showFoot('view');
+        toast('Cambios guardados correctamente.');
+      } else if (act === 'do-delete') {
+        records = records.filter(x => x.id !== openId);
+        save(); render();
+        closeDetail();
+        toast('Cliente eliminado.');
+      }
+    });
+
+    /* ---------- Aviso ---------- */
+    let toastTimer;
+    function toast(msg) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    /* ---------- Formulario ---------- */
+    $('form').addEventListener('submit', e => {
+      e.preventDefault();
+      const name  = $('name').value.trim();
+      const email = $('email').value.trim();
+      const phone = $('phone').value.trim();
+      if (!name || !email || !phone) return;
+
+      records.unshift({
+        id: records.length ? Math.max(...records.map(r => r.id)) + 1 : 1,
+        name, email, phone,
+        notes: $('notes').value.trim(),
+        date: iso(new Date())
+      });
+      save();
+      e.target.reset();
+      render();
+      toast(`Cliente «${name}» guardado.`);
+      $('name').focus();
+    });
+
+    /* ---------- Búsqueda ---------- */
+    $('search').addEventListener('input', e => { term = e.target.value; render(); });
+
+    /* ---------- Fecha de hoy ---------- */
+    try {
+      $('today').textContent = new Date().toLocaleDateString('es-EC', { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch (e) {}
+
+    render();
+  </script>
+</body>
+</html>

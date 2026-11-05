@@ -1,6 +1,6 @@
 # VivaVisas
 
-Proyecto Full Stack con **React (Vite)** en el frontend y **Express.js** en el backend.
+Proyecto Full Stack con **React (Vite)** en el frontend y **Express.js + TypeORM** en el backend conectado a **PostgreSQL (Neon)**.
 
 ---
 
@@ -8,19 +8,22 @@ Proyecto Full Stack con **React (Vite)** en el frontend y **Express.js** en el b
 
 ```text
 VivaVisas/
-├── backend/            # API REST con Express.js (Node.js)
+├── backend/                  # API REST con Express.js y TypeORM
 │   ├── src/
-│   │   └── index.js    # Servidor y rutas principales
-│   ├── .env.example    # Variables de entorno de ejemplo
-│   ├── .env            # Variables de entorno locales
+│   │   ├── entities/         # Esquemas de TypeORM (JavaScript puro)
+│   │   │   └── Usuario.js
+│   │   ├── data-source.js    # Conexión TypeORM a Neon PostgreSQL
+│   │   └── index.js          # Servidor Express y rutas de la API
+│   ├── .env.example          # Plantilla de variables de entorno
+│   ├── .env                  # Variables locales (con DATABASE_URL de Neon)
 │   └── package.json
-├── frontend/           # Aplicación React creada con Vite
+├── frontend/                 # Aplicación React creada con Vite
 │   ├── src/
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   └── package.json
-├── .gitignore          # Reglas de git para ignorar node_modules, etc.
-├── package.json        # Scripts convenientes en la raíz
+├── .gitignore                # Reglas de git para ignorar node_modules, .env, etc.
+├── package.json              # Scripts centralizados en la raíz
 └── README.md
 ```
 
@@ -28,21 +31,17 @@ VivaVisas/
 
 ## 🚀 Cómo ejecutar el proyecto
 
-### 1. Iniciar el Backend (Express)
+### 1. Iniciar el Backend (Express + TypeORM)
 Desde la raíz del proyecto:
 ```bash
 npm run dev:backend
 ```
-O entrando a la carpeta:
-```bash
-cd backend
-npm run dev
-```
-El servidor backend se ejecutará en: `http://localhost:5000`
+El servidor backend se ejecutará en: `http://localhost:4000` *(configurable en `backend/.env`)*.
 
 Rutas de prueba:
-- `http://localhost:5000/` -> Mensaje de bienvenida
-- `http://localhost:5000/api/health` -> Chequeo de estado
+- `http://localhost:4000/` -> Mensaje de bienvenida
+- `http://localhost:4000/api/health` -> Chequeo de estado del servidor y de la base de datos Neon
+- `http://localhost:4000/api/usuarios` -> Listar usuarios (`GET`) o crear usuario (`POST`)
 
 ---
 
@@ -51,16 +50,11 @@ Desde la raíz del proyecto:
 ```bash
 npm run dev:frontend
 ```
-O entrando a la carpeta:
-```bash
-cd frontend
-npm run dev
-```
-La aplicación React se ejecutará por defecto en: `http://localhost:5173`
+La aplicación React se ejecutará en: `http://localhost:5173`
 
 ---
 
-### 3. Instalar dependencias si clonas el proyecto nuevamente
+### 3. Instalar dependencias en ambos entornos
 ```bash
 npm run install:all
 ```

@@ -46,36 +46,66 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setAlert(null);
 
     if(!validate()) return;
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-
-      if(isForgotPassword) {
+    
+    try {
+      if (isForgotPassword) {
         setAlert({
           type: 'success',
           text: `Se ha enviado un enlace de recuperación a ${formData.email}`,
         });
-      } else {
-        if (formData.password === '123456') {
-          setAlert({
-            type: 'error',
-            text: 'Credenciales inválidas. Por favor intenta nuevamente.',
-          });
-        } else {
-          setAlert({
-            type: 'success',
-            text: '¡Inicio de sesión exitoso! (Modo presentación)'
-          });
-        }
+        setIsLoading(false);
+        return;
       }
-    }, 1500);
+    const response = await fetch('http://localhost:4000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Ocurrió un error al intentar inciar sesión.');
+    }
+
+    if(data.token) {
+      localStorage.setItem('auth_token', data.token);
+    }
+    if (data.usuario) {
+      localStorage.setItem('auth_user', JSON.stringify(data.usuario));
+    }
+
+    setAlert({
+      type: 'success',
+      text: 'Redirigiendo...'
+    });
+
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    },1000);
+  
+  } catch (error) {
+    setAlert({
+      type: 'error',
+      text: error.message || 'Error de conexión con el servidor. Verifica que el backend esté encendido.',
+    });
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   const toggleView = () => {
     setIsForgotPassword(!isForgotPassword);

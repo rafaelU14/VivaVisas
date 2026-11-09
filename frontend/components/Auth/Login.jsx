@@ -1,26 +1,66 @@
 import { use, useState } from "react";
-import './Login.css';
+import "./Login.css";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  const[isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState(null); // { type: 'error' | 'success', text: '' }
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const loginRequest = async (credentials) => {
+    const response = await fetch('http://localhost:4000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify(credentials),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Credenciales inválidas');
+    }
+    return data;
+  };
+
+  const loginMutation = useMutation({
+    mutationFn: loginRequest,
+    onSuccess: (data) => {
+      login(data.token, data.usuario);
+      setAlert({
+        type: 'success',
+        text: '¡Bienvenido! Redirigiendo...'
+      });
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 800);
+    },
+    onError: (error) => {
+      setAlert({
+        type: 'error',
+        text: error.message
+      });
+    }
+  });
+
+  const isLoading = loginMutation.isPending;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value}));
-  
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: ''}));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -29,16 +69,16 @@ export default function Login() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formData.email.trim()) {
-      newErrors.email = 'El correo electrónico es obligatorio.';
+      newErrors.email = "El correo electrónico es obligatorio.";
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Ingresa un formato de correo válido.';
+      newErrors.email = "Ingresa un formato de correo válido.";
     }
 
     if (!isForgotPassword) {
       if (!formData.password) {
-        newErrors.password = 'La contraseña es obligatoria.';
+        newErrors.password = "La contraseña es obligatoria.";
       } else if (formData.password.length < 8) {
-        newErrors.password = 'Debe tener al menos 8 caracteres.';
+        newErrors.password = "Debe tener al menos 8 caracteres.";
       }
     }
 
@@ -46,72 +86,31 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setAlert(null);
 
-    if(!validate()) return;
+    if (!validate()) return;
 
-    setIsLoading(true);
-    
-    try {
-      if (isForgotPassword) {
-        setAlert({
-          type: 'success',
-          text: `Se ha enviado un enlace de recuperación a ${formData.email}`,
-        });
-        setIsLoading(false);
-        return;
-      }
-    const response = await fetch('http://localhost:4000/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
+    if (isForgotPassword) {
+      setAlert({
+        type: 'success',
+        text: `Se ha enviado un enlace de recuperación a ${formData.email}`,
+      });
+      return;
+    }
+
+    loginMutation.mutate({
+      email: formData.email,
+      password: formData.password,
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Ocurrió un error al intentar inciar sesión.');
-    }
-
-    if(data.token) {
-      localStorage.setItem('auth_token', data.token);
-    }
-    if (data.usuario) {
-      localStorage.setItem('auth_user', JSON.stringify(data.usuario));
-    }
-
-    setAlert({
-      type: 'success',
-      text: 'Redirigiendo...'
-    });
-
-    setTimeout(() => {
-      window.location.href = '/dashboard';
-    },1000);
-  
-  } catch (error) {
-    setAlert({
-      type: 'error',
-      text: error.message || 'Error de conexión con el servidor. Verifica que el backend esté encendido.',
-    });
-    } finally {
-      setIsLoading(false);
-    }
   };
-
 
   const toggleView = () => {
     setIsForgotPassword(!isForgotPassword);
     setErrors({});
     setAlert(null);
-    setFormData((prev) => ({ ...prev, password: ''}));
+    setFormData((prev) => ({ ...prev, password: "" }));
   };
 
   return (
@@ -120,16 +119,18 @@ export default function Login() {
         {/*Cabecera / Marca */}
         <div className="auth-header">
           <div className="auth-logo">✈️</div>
-          <h2>{isForgotPassword ? 'Recuperar contraseña:' : 'Iniciar sesión'}</h2>
+          <h2>
+            {isForgotPassword ? "Recuperar contraseña:" : "Iniciar sesión"}
+          </h2>
           <p>
             {isForgotPassword
-              ? 'Ingresa tu correo y te enviaremos instrucciones.'
-              : 'Bienvenido de nuevo a Viva Viajes'}
+              ? "Ingresa tu correo y te enviaremos instrucciones."
+              : "Bienvenido de nuevo a Viva Viajes"}
           </p>
         </div>
         {/* Alerta de Error / Éxito */}
         {alert && (
-          <div className={`auth-alert alert-${alert.type}`} role ="alert">
+          <div className={`auth-alert alert-${alert.type}`} role="alert">
             <span>{alert.text}</span>
           </div>
         )}
@@ -147,7 +148,7 @@ export default function Login() {
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading}
-              className={errors.email ? 'input-error' : ''}
+              className={errors.email ? "input-error" : ""}
             />
             {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
@@ -173,20 +174,22 @@ export default function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
-                className={errors.password ? 'input-error' : ''}
+                className={errors.password ? "input-error" : ""}
               />
-              {errors.password && <span className="error-text">{errors.password}</span>}
+              {errors.password && (
+                <span className="error-text">{errors.password}</span>
+              )}
             </div>
           )}
 
           {/* Botón con Spinner */}
           <button type="submit" className="btn-submit" disabled={isLoading}>
-            {isLoading ? (
+            {loginMutation.isPending ? (
               <span className="spinner" aria-label="Cargando..."></span>
             ) : isForgotPassword ? (
-              'Enviar instrucciones'
+              "Enviar instrucciones"
             ) : (
-              'Entrar al sistema'
+              "Entrar al sistema"
             )}
           </button>
         </form>
@@ -201,9 +204,9 @@ export default function Login() {
             >
               ← Volver al inicio de sesión
             </button>
-        </div>
-      )}
-    </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

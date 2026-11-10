@@ -1,0 +1,107 @@
+.calendar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.calendar-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+
+  /* Variables temáticas de FullCalendar v7 */
+  --fc-classic-primary: #d91e36;
+  --fc-classic-primary-foreground: #ffffff;
+  --fc-classic-button: #0f172a;
+  --fc-classic-button-border: #0f172a;
+  --fc-classic-button-strong: #d91e36;
+  --fc-classic-button-strong-border: #d91e36;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-programada { background-color: #2563eb; }
+.dot-completada { background-color: #16a34a; }
+.dot-cancelada  { background-color: #dc2626; }
+
+.fc .fc-button-primary {
+  background-color: #0f172a;
+  border-color: #0f172a;
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #1e293b;
+  border-color: #1e293b;
+}
+
+.fc .fc-button-primary:disabled {
+  background-color: #94a3b8;
+  border-color: #94a3b8;
+}
+
+.fc .fc-button-active {
+  background-color: #d91e36 !important;
+  border-color: #d91e36 !important;
+}
+
+.fc-event {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 8px;
+  }
+
+  .calendar-card {
+    padding: 10px;
+  }
+
+  .fc .fc-toolbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 1.15rem;
+  }
+
+  .calendar-legend {
+    justify-content: center;
+    font-size: 0.75rem;
+  }
+}

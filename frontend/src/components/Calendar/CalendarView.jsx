@@ -23,6 +23,10 @@ const INITIAL_APPOINTMENTS = [
     id: '1',
     clientName: 'Carlos Mendoza',
     service: 'Visa B1/B2 Turismo',
+    applicants: 1,
+    modality: 'Presencial',
+    estimatedFee: '$185 USD',
+    location: 'Oficina Central — Viva Visas Reforma',
     start: new Date(new Date().setHours(10, 0, 0, 0)).toISOString(),
     end: new Date(new Date().setHours(11, 0, 0, 0)).toISOString(),
     status: 'PROGRAMADA',
@@ -32,6 +36,10 @@ const INITIAL_APPOINTMENTS = [
     id: '2',
     clientName: 'María Fernanda Gómez',
     service: 'Renovación Visa F-1 Estudiante',
+    applicants: 2,
+    modality: 'En línea',
+    estimatedFee: '$320 USD',
+    location: 'https://meet.google.com/viv-visas-asesoria',
     start: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().replace(/T.*$/, 'T12:00:00'),
     end: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().replace(/T.*$/, 'T13:00:00'),
     status: 'PROGRAMADA',
@@ -41,6 +49,10 @@ const INITIAL_APPOINTMENTS = [
     id: '3',
     clientName: 'Alejandro Ruiz',
     service: 'Asesoría Residencia Permanente',
+    applicants: 1,
+    modality: 'Presencial',
+    estimatedFee: '$250 USD',
+    location: 'Oficina Central — Viva Visas Reforma',
     start: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().replace(/T.*$/, 'T15:00:00'),
     end: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().replace(/T.*$/, 'T16:00:00'),
     status: 'COMPLETADA',
@@ -50,6 +62,10 @@ const INITIAL_APPOINTMENTS = [
     id: '4',
     clientName: 'Sofía Valenzuela',
     service: 'Trámite Visa de Trabajo H-1B',
+    applicants: 1,
+    modality: 'En línea',
+    estimatedFee: '$460 USD',
+    location: 'https://meet.google.com/viv-visas-asesoria',
     start: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString().replace(/T.*$/, 'T09:00:00'),
     end: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString().replace(/T.*$/, 'T10:00:00'),
     status: 'CANCELADA',
@@ -97,6 +113,14 @@ export default function CalendarView() {
     );
     setSelectedAppointment((prev) => (prev ? { ...prev, status: newStatus } : null));
     setIsModalOpen(false);
+  };
+
+  const handleReschedule = (id, newStart, newEnd) => {
+    setAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === id ? { ...apt, start: newStart, end: newEnd } : apt
+      )
+    );
   };
 
   return (
@@ -147,6 +171,7 @@ export default function CalendarView() {
         newDate={selectedDate}
         onStatusChange={handleStatusChange}
         onCreateAppointment={handleCreateAppointment}
+        onReschedule={handleReschedule}
       />
     </div>
   );

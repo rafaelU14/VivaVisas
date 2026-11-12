@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
   ssl: {
     rejectUnauthorized: false,
   },
-  synchronize: true, // Sincroniza esquemas automáticamente en desarrollo
+  synchronize: true,
   logging: false,
   entities: [Usuario],
 });

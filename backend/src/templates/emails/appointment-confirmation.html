@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Cita - Viva Viajes</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #0f172a; -webkit-font-smoothing: antialiased;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f8fafc; padding: 48px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 580px; background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden;">
+          
+          <tr>
+            <td style="padding: 32px 40px; border-bottom: 1px solid #f1f5f9;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td>
+                    <span style="font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em;">
+                      Viva <span style="color: #d91e36;">Viajes</span>
+                    </span>
+                  </td>
+                  <td align="right">
+                    <span style="display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #166534; background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 4px 10px; border-radius: 4px;">
+                      Confirmada
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 36px 40px 24px 40px;">
+              <h1 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 600; color: #0f172a; letter-spacing: -0.01em;">
+                Confirmación de cita
+              </h1>
+              <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #475569;">
+                Estimado/a {{clientName}}, le informamos que su sesión ha sido agendada con éxito. A continuación se presentan los detalles correspondientes:
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 40px 28px 40px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; border-collapse: separate;">
+                <tr>
+                  <td style="padding: 16px 20px; border-bottom: 1px solid #f1f5f9;">
+                    <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">Servicio</div>
+                    <div style="font-size: 15px; font-weight: 500; color: #0f172a;">{{service}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 16px 20px; border-bottom: 1px solid #f1f5f9;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td width="50%" style="vertical-align: top;">
+                          <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">Fecha</div>
+                          <div style="font-size: 15px; font-weight: 500; color: #0f172a;">{{appointmentDate}}</div>
+                        </td>
+                        <td width="50%" style="vertical-align: top;">
+                          <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">Hora</div>
+                          <div style="font-size: 15px; font-weight: 500; color: #0f172a;">{{appointmentTime}}</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 16px 20px; border-bottom: 1px solid #f1f5f9;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td width="50%" style="vertical-align: top;">
+                          <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">Modalidad</div>
+                          <div style="font-size: 15px; font-weight: 500; color: #0f172a;">{{modality}}</div>
+                        </td>
+                        <td width="50%" style="vertical-align: top;">
+                          <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">Solicitantes</div>
+                          <div style="font-size: 15px; font-weight: 500; color: #0f172a;">{{applicants}}</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 16px 20px; border-bottom: 1px solid #f1f5f9;">
+                    <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">Ubicación / Acceso</div>
+                    <div style="font-size: 14px; font-weight: 500; color: #0f172a; word-break: break-all;">{{locationOrLink}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 16px 20px;">
+                    <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 4px;">Asesor</div>
+                    <div style="font-size: 15px; font-weight: 500; color: #0f172a;">{{advisorName}}</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 40px 36px 40px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="left">
+                    <a href="{{manageAppointmentUrl}}" target="_blank" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 24px; border-radius: 6px; letter-spacing: -0.01em;">
+                      Gestionar cita
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 12px; line-height: 1.6; color: #64748b;">
+              <p style="margin: 0 0 4px 0; font-weight: 600; color: #0f172a;">
+                Viva Viajes — Contacto y Soporte
+              </p>
+              <p style="margin: 0 0 8px 0;">
+                Correo: <a href="mailto:{{supportEmail}}" style="color: #0f172a; text-decoration: underline;">{{supportEmail}}</a> &nbsp;|&nbsp; Teléfono: {{supportPhone}}
+              </p>
+              <p style="margin: 0; font-size: 11px; color: #94a3b8;">
+                © 2026 Viva Viajes. Todos los derechos reservados.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

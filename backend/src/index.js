@@ -7,6 +7,7 @@ import { Usuario } from './entities/Usuario.js';
 import clientRoutes from './routes/clientRoutes.js'
 import { errorHandler } from './middlewares/errorHandler.js';
 import { signToken } from './middlewares/authMiddleware.js';
+import appointmentRoutes from './routes/appointmentRoutes.js';
 
 dotenv.config();
 
@@ -110,6 +111,8 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Inicializar la conexión a Neon con TypeORM y luego levantar el servidor Express
 app.use('/api/clientes', clientRoutes);
+
+app.use('/api/citas', appointmentRoutes)
 
 app.use(errorHandler);
 

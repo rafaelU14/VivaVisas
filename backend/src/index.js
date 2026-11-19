@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import { ILike } from 'typeorm';
 import { AppDataSource } from './data-source.js';
 import { Usuario } from './entities/Usuario.js';
+import clientRoutes from './routes/clientRoutes.js'
+import { errorHandler } from './middlewares/errorHandler.js';
+import { signToken } from './middlewares/authMiddleware.js';
 
 dotenv.config();
 
@@ -84,9 +87,15 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas. Contraseña incorrecta.'});
     }
 
+        const token = signToken({
+      id: usuario.id,
+      nombre: usuario.nombre,
+      email: usuario.email
+    });
+
     return res.status(200).json({
       message: 'Inicio de sesión exitoso',
-      token: 'jwt-simulado-token-xyz',
+      token,
       usuario: {
         id: usuario.id,
         nombre: usuario.nombre,
@@ -100,6 +109,10 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Inicializar la conexión a Neon con TypeORM y luego levantar el servidor Express
+app.use('/api/clientes', clientRoutes);
+
+app.use(errorHandler);
+
 AppDataSource.initialize()
   .then(async () => {
     console.log(' Conexión a Neon PostgreSQL exitosa con TypeORM');

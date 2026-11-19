@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
 import { Usuario } from './entities/Usuario.js';
+import { Cliente } from './entities/Cliente.js';
 
 dotenv.config();
 
@@ -13,5 +14,5 @@ export const AppDataSource = new DataSource({
   },
   synchronize: true,
   logging: false,
-  entities: [Usuario],
+  entities: [Usuario, Cliente],
 });

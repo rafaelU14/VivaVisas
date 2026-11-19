@@ -1,36 +1,70 @@
+import {
+  normalizeEmail,
+  validatePhoneNumber,
+  normalizeEcuadorianPhone,
+  validateClientDocument,
+} from '../utils/contactValidation.js';
+
 export function validateClientPayload(req, res, next) {
-  const { nombres, apellidos, telefono, email } = req.body;
+  const { nombres, apellidos, telefono, email, identificacion } = req.body;
 
-  if (
-    !nombres || !nombres.trim() ||
-    !apellidos || !apellidos.trim() ||
-    !telefono || !telefono.trim() ||
-    !email || !email.trim()
-  ) {
+  if (!nombres || !nombres.trim()) {
     return res.status(400).json({
-      error: 'Los campos nombres, apellidos, telefono y email son obligatorios y no pueden estar vacios.',
+      error: 'El campo nombres es obligatorio.',
+      field: 'nombres',
     });
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email.trim())) {
+  if (!apellidos || !apellidos.trim()) {
     return res.status(400).json({
-      error: 'El formato de correo electronico es invalido.',
+      error: 'El campo apellidos es obligatorio.',
+      field: 'apellidos',
     });
   }
 
-  const ecuadorPhoneRegex = /^(\+593|0)9[0-9]{8}$/;
-  const cleanPhone = telefono.trim().replace(/\s+/g, '');
-  if (!ecuadorPhoneRegex.test(cleanPhone)) {
+  if (!email || !email.trim()) {
     return res.status(400).json({
-      error: 'El formato del telefono debe ser de Ecuador (+5939XXXXXXXX o 09XXXXXXXX).',
+      error: 'El campo email es obligatorio.',
+      field: 'email',
     });
+  }
+
+  const sanitizedEmail = normalizeEmail(email);
+  if (!sanitizedEmail) {
+    return res.status(400).json({
+      error: 'La dirección de correo no cumple con el estándar RFC 5322.',
+      field: 'email',
+    });
+  }
+
+  if (!telefono || !telefono.trim()) {
+    return res.status(400).json({
+      error: 'El campo teléfono es obligatorio.',
+      field: 'telefono',
+    });
+  }
+
+  if (!validatePhoneNumber(telefono)) {
+    return res.status(400).json({
+      error: 'El número de teléfono es inválido o no cumple con el formato (+593 para Ecuador).',
+      field: 'telefono',
+    });
+  }
+
+  if (identificacion && identificacion.trim()) {
+    if (!validateClientDocument(identificacion)) {
+      return res.status(400).json({
+        error: 'El documento de identificación (cédula ecuatoriana o pasaporte) es inválido.',
+        field: 'identificacion',
+      });
+    }
+    req.body.identificacion = identificacion.trim().toUpperCase();
   }
 
   req.body.nombres = nombres.trim();
   req.body.apellidos = apellidos.trim();
-  req.body.telefono = cleanPhone;
-  req.body.email = email.trim().toLowerCase();
+  req.body.email = sanitizedEmail;
+  req.body.telefono = normalizeEcuadorianPhone(telefono);
 
   next();
 }
@@ -41,7 +75,8 @@ export function validateClientId(req, res, next) {
 
   if (isNaN(numericId) || numericId <= 0) {
     return res.status(400).json({
-      error: 'El identificador del cliente debe ser un numero entero positivo valido.',
+      error: 'El identificador del cliente debe ser un entero positivo válido.',
+      field: 'id',
     });
   }
 

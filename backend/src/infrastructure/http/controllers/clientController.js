@@ -1,4 +1,4 @@
-import * as clientRepository from '../repositories/clientRepository.js';
+import * as clientRepository from '../../database/repositories/clientRepository.js';
 
 export async function createClient(req, res) {
   try {

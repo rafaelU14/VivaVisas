@@ -1,5 +1,5 @@
-import { generateDailyTimeSlots } from '../services/availabilityService.js';
-import * as appointmentRepository from '../repositories/appointmentRepository.js';
+import { generateDailyTimeSlots } from '../../external/services/availabilityService.js';
+import * as appointmentRepository from '../../database/repositories/appointmentRepository.js';
 
 export async function getAvailability(req, res) {
   try {

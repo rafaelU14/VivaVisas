@@ -38,7 +38,13 @@ Desde la raíz del proyecto:
 npm run install:all
 ```
 
-### 2. Iniciar el Backend (Express + TypeORM)
+### 2. Configurar variables de entorno y migraciones
+Copia `backend/.env.example` a `backend/.env` con tus credenciales locales y ejecuta las migraciones:
+```bash
+npm --prefix backend run migration:run
+```
+
+### 3. Iniciar el Backend (Express + TypeORM)
 Desde la raíz del proyecto:
 ```bash
 npm run dev:backend
@@ -52,7 +58,7 @@ Rutas principales de verificación:
 * `http://localhost:4000/api/clientes` -> Gestión de cartera de clientes (protegido por JWT).
 * `http://localhost:4000/api/citas/disponibilidad` -> Cálculo dinámico de slots horarios.
 
-### 3. Iniciar el Frontend (React + Vite)
+### 4. Iniciar el Frontend (React + Vite)
 Desde la raíz del proyecto:
 ```bash
 npm run dev:frontend

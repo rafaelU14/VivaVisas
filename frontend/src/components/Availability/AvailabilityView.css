@@ -1,0 +1,39 @@
+.availability-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.availability-field {
+  background-color: #ffffff;
+  color: #1e293b;
+  padding: 9px 12px;
+  font-size: 0.9rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.availability-field:focus {
+  border-color: #d91e36;
+  box-shadow: 0 0 0 3px rgba(217, 30, 54, 0.12);
+}
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.slot-item {
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-align: center;
+}

@@ -50,4 +50,16 @@ export const Cliente = new EntitySchema({
       updateDate: true,
     },
   },
+  relations: {
+    appointments: {
+      type: 'one-to-many',
+      target: 'Appointment',
+      inverseSide: 'client',
+    },
+    participations: {
+      type: 'one-to-many',
+      target: 'AppointmentParticipant',
+      inverseSide: 'client',
+    },
+  },
 });

@@ -43,6 +43,18 @@ export const Usuario = new EntitySchema({
     updatedAt: {
       type: 'timestamp',
       updateDate: true,
-    }
+    },
+  },
+  relations: {
+    appointments: {
+      type: 'one-to-many',
+      target: 'Appointment',
+      inverseSide: 'advisor',
+    },
+    auditLogs: {
+      type: 'one-to-many',
+      target: 'AuditLog',
+      inverseSide: 'user',
+    },
   },
 });

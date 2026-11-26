@@ -6,7 +6,11 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "typeorm": "node ./node_modules/typeorm/cli.js",
+    "migration:run": "node ./node_modules/typeorm/cli.js migration:run -d src/infrastructure/database/data-source.js",
+    "migration:revert": "node ./node_modules/typeorm/cli.js migration:revert -d src/infrastructure/database/data-source.js",
+    "migration:show": "node ./node_modules/typeorm/cli.js migration:show -d src/infrastructure/database/data-source.js"
   },
   "keywords": [],
   "author": "",

@@ -59,3 +59,21 @@ export function verifyAuthToken(req, res, next) {
   req.user = decoded;
   next();
 }
+
+export function requireRoles(...allowedRoles) {
+  return (req, res, next) => {
+    if (!req.user || !req.user.role) {
+      return res.status(403).json({
+        error: 'Acceso denegado: Usuario sin rol asignado en el token',
+      });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({
+        error: `Acceso denegado: Se requiere uno de los siguientes roles: ${allowedRoles.join(', ')}.`,
+      });
+    }
+
+    next()
+  };
+}

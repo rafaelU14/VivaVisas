@@ -2,6 +2,7 @@ import { ILike } from 'typeorm';
 import { AppDataSource } from '../../database/data-source.js';
 import { Usuario } from '../../database/entities/Usuario.js';
 import { signToken } from '../middlewares/authMiddleware.js';
+import { comparePassword } from '../utils/passwordService.js';
 
 export async function login(req, res) {
   try {
@@ -21,15 +22,23 @@ export async function login(req, res) {
       return res.status(401).json({ error: 'Credenciales inválidas. Usuario no registrado.' });
     }
 
-    const expectedPassword = process.env.ADMIN_PASSWORD || 'Admin123*';
-    if (password.trim() !== expectedPassword) {
+    if (usuario.status === false) {
+      return res.status(403).json({ error: 'Cuenta inactiva. Contacte al administrador.' });
+    }
+
+    const isMatch = await comparePassword(password.trim(), usuario.password);
+    if (!isMatch) {
       return res.status(401).json({ error: 'Credenciales inválidas. Contraseña incorrecta.' });
     }
+
+    usuario.lastLogin = new Date();
+    await usuarioRepo.save(usuario);
 
     const token = signToken({
       id: usuario.id,
       nombre: usuario.nombre,
       email: usuario.email,
+      role: usuario.role,
     });
 
     return res.status(200).json({
@@ -39,6 +48,7 @@ export async function login(req, res) {
         id: usuario.id,
         nombre: usuario.nombre,
         email: usuario.email,
+        role: usuario.role,
       },
     });
   } catch (error) {

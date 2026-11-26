@@ -21,4 +21,9 @@ export const createUserSchema = z.object({
     .trim()
     .toLowerCase()
     .email('El formato de correo electrónico es inválido.'),
+  password: z
+    .string({ required_error: 'La contraseña es obligatoria.' })
+    .min(6, 'La contraseña debe tener al menos 6 caracteres.'),
+  role: z.enum(['ADMIN', 'ADVISOR']).optional().default('ADVISOR'),
+  status: z.boolean().optional().default(true),
 });

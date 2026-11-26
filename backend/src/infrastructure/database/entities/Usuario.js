@@ -18,9 +18,31 @@ export const Usuario = new EntitySchema({
       length: 150,
       unique: true,
     },
-    creadoEn: {
+    password: {
+      type: 'varchar',
+      length: 255,
+      nullable: true,
+    },
+    role: {
+      type: 'varchar',
+      length: 20,
+      default: 'ADVISOR',
+    },
+    status: {
+      type: 'boolean',
+      default: true,
+    },
+    lastLogin: {
+      type: 'timestamp',
+      nullable: true,
+    },
+    createdAt: {
       type: 'timestamp',
       createDate: true,
     },
+    updatedAt: {
+      type: 'timestamp',
+      updateDate: true,
+    }
   },
 });
